@@ -1,5 +1,11 @@
 {
   "name": "no-name",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "engines": {
+    "node": "14.15.3"
+  },
   "license": "UNLICENSED",
   "vaadin": {
     "dependencies": {
