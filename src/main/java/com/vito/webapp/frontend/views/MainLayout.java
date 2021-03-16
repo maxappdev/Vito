@@ -24,7 +24,7 @@ import com.vaadin.flow.router.PageTitle;
 public class MainLayout extends AppLayout {
     public MainLayout() {
         H3 img = new H3("Vito");
-        Tabs tabs = new Tabs(createTab("Calendar", CalendarView.class), createTab("Facebook Posts", FacebookView.class));
+        Tabs tabs = new Tabs(createTab("Facebook Posts", FacebookView.class), createTab("Calendar", CalendarView.class));
         addToNavbar(img, tabs);
     }
 

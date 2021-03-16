@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Entity
+@Entity(name = "user_entity") //it appears table with name "user" can not be created in Postgres
 @Data
 public class User extends BasicEntity {
 
