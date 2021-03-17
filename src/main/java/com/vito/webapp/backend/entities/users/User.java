@@ -1,16 +1,13 @@
-package com.vito.webapp.backend.models;
+package com.vito.webapp.backend.entities.users;
 
+import com.vito.webapp.backend.entities.BasicEntity;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,6 +33,10 @@ public class User extends BasicEntity {
 
     @Length(min = 8, message = "minimum length is 8")
     private String password;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "social_data_id", referencedColumnName = "id")
+    private UserSocialData socialData;
 
     @Transient
     @Length(min = 8, message = "minimum length is 8")

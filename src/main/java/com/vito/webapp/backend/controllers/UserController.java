@@ -1,13 +1,11 @@
 package com.vito.webapp.backend.controllers;
 
-import com.vito.webapp.backend.models.User;
+import com.vito.webapp.backend.entities.users.User;
 import com.vito.webapp.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -19,12 +17,12 @@ public class UserController {
     private UserRepository userRepository;
 
     @Transactional
-    public ResponseEntity<String> saveUser(User user){
+    public ResponseEntity<String> saveUser(User user) {
         ResponseEntity result = null;
 
-        try{
+        try {
             userRepository.save(user);
-        }catch (Exception e){
+        } catch (Exception e) {
             result = new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -33,7 +31,7 @@ public class UserController {
         return result;
     }
 
-    public List<User> allUsers(){
+    public List<User> allUsers() {
         List<User> all = userRepository.findAll();
         return all;
     }

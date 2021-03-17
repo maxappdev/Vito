@@ -1,7 +1,6 @@
 package com.vito.webapp.backend.security;
 
-import com.vito.webapp.backend.models.User;
-import com.vito.webapp.backend.utils.PasswordUtils;
+import com.vito.webapp.backend.entities.users.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

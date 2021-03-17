@@ -1,4 +1,4 @@
-package com.vito.webapp.frontend.components;
+package com.vito.webapp.frontend.html;
 
 import com.vaadin.flow.component.HtmlComponent;
 

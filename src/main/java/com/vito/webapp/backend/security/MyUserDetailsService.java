@@ -1,6 +1,6 @@
 package com.vito.webapp.backend.security;
 
-import com.vito.webapp.backend.models.User;
+import com.vito.webapp.backend.entities.users.User;
 import com.vito.webapp.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

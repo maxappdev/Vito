@@ -1,4 +1,4 @@
-package com.vito.webapp.backend.models;
+package com.vito.webapp.backend.entities.users;
 
 import org.springframework.security.core.GrantedAuthority;
 

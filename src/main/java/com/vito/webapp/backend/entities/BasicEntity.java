@@ -1,4 +1,4 @@
-package com.vito.webapp.backend.models;
+package com.vito.webapp.backend.entities;
 
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
