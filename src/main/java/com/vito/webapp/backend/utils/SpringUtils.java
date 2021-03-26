@@ -1,12 +1,14 @@
 package com.vito.webapp.backend.utils;
 
 import com.vaadin.flow.server.VaadinServlet;
+import com.vito.webapp.backend.entities.users.User;
 import com.vito.webapp.backend.security.MyUserPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 public class SpringUtils {
 
@@ -16,14 +18,21 @@ public class SpringUtils {
                 .getBean(serviceType);
     }
 
-    public static MyUserPrincipal getAuthUser(){
+    public static User getAuthUser(){
+        User result = null;
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
         if (authentication != null) {
             Object principal = authentication.getPrincipal();
-            return principal instanceof MyUserPrincipal ? (MyUserPrincipal) principal : null;
+            if(principal instanceof MyUserPrincipal){
+                result = ((MyUserPrincipal) principal).getUser();
+            }
         }
-        return null;
+        return result;
+    }
+
+    public static String getBaseUrl(){
+        return ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
     }
 
 }

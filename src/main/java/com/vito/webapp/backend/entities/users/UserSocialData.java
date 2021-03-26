@@ -3,19 +3,17 @@ package com.vito.webapp.backend.entities.users;
 import com.vito.webapp.backend.entities.BasicEntity;
 import com.vito.webapp.backend.entities.DataEncryptConverter;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "user_social_data")
 public class UserSocialData extends BasicEntity {
 
     @Convert(converter = DataEncryptConverter.class)
-    private String pageAccessTokenFacebook;
+    @Column(length = 1024)
+    private String userAccessTokenFacebook;
 
     @OneToOne
     private User user;
