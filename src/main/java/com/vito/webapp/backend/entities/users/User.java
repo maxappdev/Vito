@@ -1,7 +1,8 @@
 package com.vito.webapp.backend.entities.users;
 
 import com.vito.webapp.backend.entities.BasicEntity;
-import com.vito.webapp.backend.entities.posts.FacebookGroup;
+import com.vito.webapp.backend.entities.posts.FacebookPage;
+import com.vito.webapp.backend.repositories.FacebookPageRepository;
 import com.vito.webapp.backend.repositories.UserRepository;
 import com.vito.webapp.backend.repositories.UserSocialDataRepository;
 import com.vito.webapp.backend.utils.SpringUtils;
@@ -39,8 +40,8 @@ public class User extends BasicEntity {
     @Length(min = 8, message = "minimum length is 8")
     private String password;
 
-    @OneToMany(mappedBy="user")
-    private List<FacebookGroup> facebookGroups;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    private List<FacebookPage> facebookPages;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "social_data_id", referencedColumnName = "id")
@@ -122,10 +123,25 @@ public class User extends BasicEntity {
         UserSocialData socialData = authUser.getSocialData();
         String result = null;
 
-        if(socialData != null){
+        if (socialData != null) {
             result = socialData.getUserIdFacebook();
         }
 
         return result;
+    }
+
+    public void addFacebookPage(FacebookPage facebookPage, FacebookPageRepository facebookPageRepository, UserRepository userRepository) {
+        List<FacebookPage> facebookPages = this.getFacebookPages();
+
+        if (facebookPages == null) {
+            facebookPages = new ArrayList<>();
+        }
+
+        facebookPage.setUser(this);
+        facebookPages.add(facebookPage);
+        this.setFacebookPages(facebookPages);
+
+        facebookPageRepository.save(facebookPage);
+        userRepository.save(this);
     }
 }

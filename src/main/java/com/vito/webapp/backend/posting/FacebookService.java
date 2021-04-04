@@ -1,9 +1,10 @@
 package com.vito.webapp.backend.posting;
 
 import com.vito.webapp.backend.controllers.FacebookController;
-import com.vito.webapp.backend.entities.posts.FacebookGroup;
+import com.vito.webapp.backend.entities.posts.FacebookPage;
 import com.vito.webapp.backend.entities.users.User;
 import com.vito.webapp.backend.entities.users.UserSocialData;
+import com.vito.webapp.backend.repositories.FacebookPageRepository;
 import com.vito.webapp.backend.repositories.UserRepository;
 import com.vito.webapp.backend.repositories.UserSocialDataRepository;
 import com.vito.webapp.backend.utils.SpringUtils;
@@ -11,17 +12,15 @@ import com.vito.webapp.backend.utils.VitoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.social.facebook.api.Facebook;
-import org.springframework.social.facebook.api.Group;
-import org.springframework.social.facebook.api.UserOperations;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 @Service
 public class FacebookService {
@@ -30,6 +29,8 @@ public class FacebookService {
     UserSocialDataRepository userSocialDataRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    FacebookPageRepository facebookPageRepository;
 
     @Value("${spring.social.facebook.appId}")
     String facebookAppId;
@@ -55,11 +56,40 @@ public class FacebookService {
         authUser.addFacebookAccessToken(accessToken, userSocialDataRepository, userRepository);
     }
 
-    public void getGroups(){
+    public void savePages() { // TODO logging
         User authUser = SpringUtils.getAuthUser();
         Facebook facebook = getFacebookObj();
-        Object groups = facebook.fetchObject(authUser.getFacebookUserId() + "/groups", Object.class);
-        groups = groups;
+        Object pages = facebook.fetchObject(authUser.getFacebookUserId() + "/accounts", Object.class);
+
+        if (pages instanceof LinkedHashMap) {
+            LinkedHashMap map = (LinkedHashMap) pages;
+            Object data = map.get("data");
+            if ((data != null) && data instanceof ArrayList) {
+                ArrayList list = (ArrayList) data;
+                if (!list.isEmpty()) {
+                    Object pageData = list.get(0);
+                    if ((pageData != null) && pageData instanceof LinkedHashMap) {
+                        LinkedHashMap<String, String> pageDataMap = (LinkedHashMap<String, String>) pageData;
+
+                        if (pageDataMap != null) {
+                            String accessToken = pageDataMap.get("access_token");
+                            String name = pageDataMap.get("name");
+                            String id = pageDataMap.get("id");
+                            String category = pageDataMap.get("category");
+
+                            FacebookPage facebookPage = new FacebookPage();
+                            facebookPage.setAccessToken(accessToken);
+                            facebookPage.setName(name);
+                            facebookPage.setPageId(id);
+                            facebookPage.setCategory(category);
+
+                            authUser.addFacebookPage(facebookPage, facebookPageRepository, userRepository);
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     public void saveUserId(){ //TODO add errors here, error handling in whole app

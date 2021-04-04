@@ -1,6 +1,5 @@
 package com.vito.webapp.backend.controllers;
 
-import com.vito.webapp.backend.entities.posts.FacebookGroup;
 import com.vito.webapp.backend.posting.FacebookService;
 import com.vito.webapp.backend.utils.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
-
-import java.util.List;
 
 @Controller
 public class FacebookController {
@@ -26,16 +23,12 @@ public class FacebookController {
         return new RedirectView(authorizationURL);
     }
 
-    @GetMapping(SAVE_USER_TOKEN_MAPPING)
-    public RedirectView saveUserToken(@RequestParam("code") String code) {
+    @GetMapping(SAVE_USER_TOKEN_MAPPING) //TODO error handling
+    public RedirectView saveUserData(@RequestParam("code") String code) {
         facebookService.saveUserAccessToken(code);
         facebookService.saveUserId();
-        return new RedirectView(SpringUtils.getBaseUrl());
-    }
+        facebookService.savePages();
 
-    @GetMapping("/token")
-    public String showAccessToken(){
-        facebookService.getGroups();
-        return SpringUtils.getAuthUser().getSocialData().getUserAccessTokenFacebook(); //TODO only testing
+        return new RedirectView(SpringUtils.getBaseUrl());
     }
 }
