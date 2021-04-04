@@ -15,7 +15,9 @@ public class UserSocialData extends BasicEntity {
     @Column(length = 1024)
     private String userAccessTokenFacebook;
 
-    @OneToOne
+    private String userIdFacebook;
+
+    @OneToOne(mappedBy = "socialData")
     private User user;
 
 }

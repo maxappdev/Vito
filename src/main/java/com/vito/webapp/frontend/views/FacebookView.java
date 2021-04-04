@@ -1,6 +1,9 @@
 package com.vito.webapp.frontend.views;
 
+import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -22,10 +25,24 @@ public class FacebookView extends HorizontalLayout {
         userController = SpringUtils.getBeanInFrontend(UserController.class);
         boolean authUserHasFacebook = userController.hasFacebookData();
         if(authUserHasFacebook){
-            addCreatePost();
+            addGroups();
+            //addCreatePost();
         }else{
             add(facebookAuthForm);
         }
+    }
+
+    private void addGroups() {
+        Span message = new Span();
+
+        Dialog dialog = new Dialog(new Text("Close me with the esc-key"));
+
+        dialog.addDialogCloseActionListener(e -> {
+            message.setText("Closed from server-side");
+            dialog.close();
+        });
+
+        dialog.open();
     }
 
     private void addCreatePost() {

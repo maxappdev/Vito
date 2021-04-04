@@ -1,7 +1,10 @@
 package com.vito.webapp.backend.entities.users;
 
 import com.vito.webapp.backend.entities.BasicEntity;
+import com.vito.webapp.backend.entities.posts.FacebookGroup;
+import com.vito.webapp.backend.repositories.UserRepository;
 import com.vito.webapp.backend.repositories.UserSocialDataRepository;
+import com.vito.webapp.backend.utils.SpringUtils;
 import com.vito.webapp.backend.utils.VitoUtils;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -36,7 +39,9 @@ public class User extends BasicEntity {
     @Length(min = 8, message = "minimum length is 8")
     private String password;
 
-    @Transient
+    @OneToMany(mappedBy="user")
+    private List<FacebookGroup> facebookGroups;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "social_data_id", referencedColumnName = "id")
     private UserSocialData socialData;
@@ -55,15 +60,18 @@ public class User extends BasicEntity {
         return result;
     }
 
-    public void addFacebookAccessToken(String token, UserSocialDataRepository socialDataRepository) {
+    public void addFacebookAccessToken(String token, UserSocialDataRepository socialDataRepository, UserRepository userRepository) {
         UserSocialData socialData = getSocialData();
         if (socialData == null) {
             UserSocialData newSocialData = new UserSocialData();
             newSocialData.setUserAccessTokenFacebook(token);
+
             newSocialData.setUser(this);
             this.setSocialData(newSocialData);
 
             socialDataRepository.save(newSocialData);
+            userRepository.save(this);
+
         } else {
             if (token != socialData.getUserAccessTokenFacebook()) {
                 socialData.setUserAccessTokenFacebook(token);
@@ -83,6 +91,39 @@ public class User extends BasicEntity {
             if (VitoUtils.ok(accessTokenFacebook)) {
                 result = true;
             }
+        }
+
+        return result;
+    }
+
+    public void saveFacebookUserId(String userId, UserSocialDataRepository socialDataRepository, UserRepository userRepository) {
+        UserSocialData socialData = getSocialData();
+        if (socialData == null) {
+            UserSocialData newSocialData = new UserSocialData();
+            newSocialData.setUserIdFacebook(userId);
+
+            newSocialData.setUser(this);
+            this.setSocialData(newSocialData);
+
+            socialDataRepository.save(newSocialData);
+            userRepository.save(this);
+
+        } else {
+            if (VitoUtils.ok(userId)) {
+                socialData.setUserIdFacebook(userId);
+
+                socialDataRepository.save(socialData);
+            }
+        }
+    }
+
+    public String getFacebookUserId() {
+        User authUser = SpringUtils.getAuthUser();
+        UserSocialData socialData = authUser.getSocialData();
+        String result = null;
+
+        if(socialData != null){
+            result = socialData.getUserIdFacebook();
         }
 
         return result;

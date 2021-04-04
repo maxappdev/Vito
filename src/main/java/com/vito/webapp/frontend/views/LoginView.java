@@ -6,17 +6,21 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.H6;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.VaadinRequest;
+import com.vaadin.flow.server.VaadinService;
 import org.atmosphere.interceptor.AtmosphereResourceStateRecovery;
+
+import java.text.Normalizer;
+import java.util.List;
+import java.util.Map;
 
 @Route("login")
 @PageTitle("Login | Vito")
-public class LoginView extends VerticalLayout implements BeforeEnterObserver {
+public class LoginView extends VerticalLayout implements BeforeEnterObserver, HasUrlParameter<String> {
 
     private LoginForm login = new LoginForm();
 
@@ -45,5 +49,22 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
                 .containsKey("error")) {
             login.setError(true);
         }
+        VaadinRequest currentRequest = VaadinService.getCurrentRequest();
+        currentRequest = currentRequest; //TODO maybe try this workaround
+    }
+
+
+    @Override
+    public void setParameter(BeforeEvent event,
+                             @OptionalParameter String parameter) {
+
+        Location location = event.getLocation();
+        QueryParameters queryParameters = location
+                .getQueryParameters();
+
+        Map<String, List<String>> parametersMap =
+                queryParameters.getParameters();
+
+        parametersMap = parametersMap; //TODO add parameter after registration
     }
 }
