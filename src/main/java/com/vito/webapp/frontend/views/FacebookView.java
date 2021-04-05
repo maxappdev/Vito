@@ -4,15 +4,21 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vito.webapp.backend.controllers.UserController;
+import com.vito.webapp.backend.entities.posts.FacebookPage;
+import com.vito.webapp.backend.entities.users.User;
 import com.vito.webapp.backend.utils.SpringUtils;
 import com.vito.webapp.frontend.forms.FacebookAuthForm;
 import com.vito.webapp.frontend.forms.FacebookPostForm;
 import com.vito.webapp.frontend.layouts.MainLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("Facebook Posts")
@@ -33,16 +39,19 @@ public class FacebookView extends HorizontalLayout {
     }
 
     private void addGroups() {
-        Span message = new Span();
+        User authUser = SpringUtils.getAuthUser();
+        List<FacebookPage> facebookPages = authUser.getFacebookPages();
 
-        Dialog dialog = new Dialog(new Text("Close me with the esc-key"));
+        ListBox<String> listBox = new ListBox<>();
 
-        dialog.addDialogCloseActionListener(e -> {
-            message.setText("Closed from server-side");
-            dialog.close();
+        List<String> pages = new ArrayList<>();
+        facebookPages.forEach(facebookPage -> {
+            pages.add(facebookPage.toString());
         });
 
-        dialog.open();
+        listBox.setItems(pages);
+
+        add(listBox);
     }
 
     private void addCreatePost() {

@@ -4,6 +4,7 @@ import com.vito.webapp.backend.entities.BasicEntity;
 import com.vito.webapp.backend.entities.DataEncryptConverter;
 import com.vito.webapp.backend.entities.users.User;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -25,5 +26,11 @@ public class FacebookPage extends BasicEntity {
 
     private String category;
 
-
+    @Override
+    public String toString() {
+        return "FacebookPage{" +
+                "name='" + name + '\'' +
+                ", category='" + category + '\'' +
+                '}';
+    }
 }

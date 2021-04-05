@@ -67,23 +67,24 @@ public class FacebookService {
             if ((data != null) && data instanceof ArrayList) {
                 ArrayList list = (ArrayList) data;
                 if (!list.isEmpty()) {
-                    Object pageData = list.get(0);
-                    if ((pageData != null) && pageData instanceof LinkedHashMap) {
-                        LinkedHashMap<String, String> pageDataMap = (LinkedHashMap<String, String>) pageData;
+                    for (Object pageData : list) {
+                        if ((pageData != null) && pageData instanceof LinkedHashMap) {
+                            LinkedHashMap<String, String> pageDataMap = (LinkedHashMap<String, String>) pageData;
 
-                        if (pageDataMap != null) {
-                            String accessToken = pageDataMap.get("access_token");
-                            String name = pageDataMap.get("name");
-                            String id = pageDataMap.get("id");
-                            String category = pageDataMap.get("category");
+                            if (pageDataMap != null) {
+                                String accessToken = pageDataMap.get("access_token");
+                                String name = pageDataMap.get("name");
+                                String id = pageDataMap.get("id");
+                                String category = pageDataMap.get("category");
 
-                            FacebookPage facebookPage = new FacebookPage();
-                            facebookPage.setAccessToken(accessToken);
-                            facebookPage.setName(name);
-                            facebookPage.setPageId(id);
-                            facebookPage.setCategory(category);
+                                FacebookPage facebookPage = new FacebookPage();
+                                facebookPage.setAccessToken(accessToken);
+                                facebookPage.setName(name);
+                                facebookPage.setPageId(id);
+                                facebookPage.setCategory(category);
 
-                            authUser.addFacebookPage(facebookPage, facebookPageRepository, userRepository);
+                                authUser.addFacebookPage(facebookPage, facebookPageRepository, userRepository);
+                            }
                         }
                     }
                 }
